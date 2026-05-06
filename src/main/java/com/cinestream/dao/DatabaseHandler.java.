@@ -90,5 +90,28 @@ public boolean registerUser(String username, String email, String password, Stri
         }
     }
 
+ public boolean addMovie(String title, String genre, int stock, String type, double price) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + MOVIES_FILE, true))) {
+            int newId = (int)(Math.random() * 10000);
+            bw.write(newId + "|" + title + "|" + genre + "|" + stock + "|" + type + "|" + price); 
+            bw.newLine(); 
+            return true;
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+            return false; 
+        }
+    }
+
+    public boolean addReview(int movieId, int userId, String username, int rating, String text) {
+        String date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + REVIEWS_FILE, true))) {
+            bw.write(movieId + "|" + userId + "|" + username + "|" + rating + "|" + date + "|" + text); 
+            bw.newLine();
+            return true;
+        } catch (Exception e) { 
+            return false; 
+        }
+    }
+
 
 }
