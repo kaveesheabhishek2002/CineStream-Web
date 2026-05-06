@@ -77,4 +77,18 @@ public class DatabaseHandler {
             healThread.setDaemon(true); healThread.start();
         }
     }
+
+public boolean registerUser(String username, String email, String password, String tier) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + USERS_FILE, true))) {
+            int newId = (int)(Math.random() * 10000); // Generate simple ID
+            bw.write(newId + "|" + username + "|" + email + "|" + password + "|" + tier); 
+            bw.newLine(); 
+            return true;
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+            return false; 
+        }
+    }
+
+
 }
