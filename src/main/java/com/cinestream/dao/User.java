@@ -1,12 +1,30 @@
 package com.cinestream.models;
 
-public class TVShow extends Media {
-    public TVShow(int id, String title, String genre, int stock, String description, String imageUrl, String backdropUrl, String trailerId, String type, double price) {
-        super(id, title, genre, stock, description, imageUrl, backdropUrl, trailerId, type, price);
+public abstract class User {
+    private int id;
+    private String username;
+    private String email;
+    private String password;
+    private String tier;
+
+    public User(int id, String username, String email, String password, String tier) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.tier = tier;
     }
 
+    public int getId() { return id; }
+    public String getUsername() { return username; }
+    public String getEmail() { return email; }
+    public String getPassword() { return password; }
+    public String getTier() { return tier; }
+
+    public abstract int getRentalLimit();
+
     @Override
-    public int getCheckoutDuration() {
-        return 7;
+    public String toString() {
+        return id + "|" + username + "|" + email + "|" + password + "|" + tier;
     }
 }
