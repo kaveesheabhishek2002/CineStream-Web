@@ -154,5 +154,39 @@ public User login(String email, String password) {
         } catch (Exception e) { e.printStackTrace(); }
         return results;
     }
+public boolean rentMovie(int userId, int movieId) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + RENTALS_FILE, true))) {
+            bw.write(userId + "|" + movieId + "|3"); // 3 days default rental
+            bw.newLine(); 
+            return true;
+        } catch (Exception e) { 
+            return false; 
+        }
+    }
 
+    public boolean updateMediaStock(int mediaId, int newStock) {
+        List<String> lines = new ArrayList<>();
+        boolean found = false;
+        try (BufferedReader br = new BufferedReader(new FileReader(dataDir + MOVIES_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] p = line.split("\\|");
+                if (p.length > 0 && Integer.parseInt(p[0]) == mediaId) {
+                    p[3] = String.valueOf(newStock);
+                    lines.add(String.join("|", p));
+                    found = true;
+                } else {
+                    lines.add(line);
+                }
+            }
+        } catch (Exception e) { return false; }
+
+        if (found) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + MOVIES_FILE))) {
+                for (String l : lines) { bw.write(l); bw.newLine(); }
+                return true;
+            } catch (Exception e) { e.printStackTrace(); }
+        } 
+        return false;
+    }
 }
