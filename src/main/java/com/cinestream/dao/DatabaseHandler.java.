@@ -189,4 +189,43 @@ public boolean rentMovie(int userId, int movieId) {
         } 
         return false;
     }
+public boolean deleteUser(int userId) {
+        List<String> retained = new ArrayList<>();
+        boolean found = false;
+        try (BufferedReader br = new BufferedReader(new FileReader(dataDir + USERS_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.split("\\|")[0].equals(String.valueOf(userId))) found = true;
+                else retained.add(line);
+            }
+        } catch (Exception e) { return false; }
+
+        if (found) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + USERS_FILE))) {
+                for (String u : retained) { bw.write(u); bw.newLine(); }
+                return true;
+            } catch (Exception e) { e.printStackTrace(); }
+        } 
+        return false;
+    }
+
+    public boolean deleteMovie(int id) {
+        List<String> retained = new ArrayList<>();
+        boolean found = false;
+        try (BufferedReader br = new BufferedReader(new FileReader(dataDir + MOVIES_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.split("\\|")[0].equals(String.valueOf(id))) found = true;
+                else retained.add(line);
+            }
+        } catch (Exception e) { return false; }
+
+        if (found) {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(dataDir + MOVIES_FILE))) {
+                for (String m : retained) { bw.write(m); bw.newLine(); }
+                return true;
+            } catch (Exception e) { e.printStackTrace(); }
+        } 
+        return false;
+    }
 }
