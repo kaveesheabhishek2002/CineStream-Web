@@ -112,6 +112,47 @@ public boolean registerUser(String username, String email, String password, Stri
             return false; 
         }
     }
+public User login(String email, String password) {
+        try (BufferedReader br = new BufferedReader(new FileReader(dataDir + USERS_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] p = line.split("\\|");
+                if (p.length >= 5 && p[2].equalsIgnoreCase(email) && p[3].equals(password)) {
+                    if (p[4].equalsIgnoreCase("premium")) return new PremiumUser(Integer.parseInt(p[0]), p[1], p[2], p[3], p[4]);
+                    return new StandardUser(Integer.parseInt(p[0]), p[1], p[2], p[3], p[4]);
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); } 
+        return null;
+    }
 
+    public List<Media> getAllMovies() {
+        List<Media> movies = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(dataDir + MOVIES_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] p = line.split("\\|");
+                if (p.length >= 6) {
+                    if (p[4].equalsIgnoreCase("TV")) movies.add(new TVShow(Integer.parseInt(p[0]), p[1], p[2], Integer.parseInt(p[3]), p[4], Double.parseDouble(p[5])));
+                    else movies.add(new Movie(Integer.parseInt(p[0]), p[1], p[2], Integer.parseInt(p[3]), p[4], Double.parseDouble(p[5])));
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return movies;
+    }
+
+    public List<Review> getReviewsForMovie(int movieId) {
+        List<Review> results = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(dataDir + REVIEWS_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] p = line.split("\\|");
+                if (p.length >= 6 && Integer.parseInt(p[0]) == movieId) {
+                    results.add(new Review(Integer.parseInt(p[0]), Integer.parseInt(p[1]), p[2], Integer.parseInt(p[3]), p[4], p[5]));
+                }
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return results;
+    }
 
 }
